@@ -15,22 +15,42 @@ namespace DesafioFundamentos.Models
         public void AdicionarVeiculo()
         {
             Console.WriteLine("Digite a placa do veículo para estacionar:");
-            veiculos.Add(Console.ReadLine());
+            string placa = Console.ReadLine().ToUpper();
+            if (veiculos.Any(x => x == placa)){
+                Console.WriteLine("O veículo já está cadastrado como estacionado.");
+                return;
+            }
+
+            veiculos.Add(placa);
         }
 
         public void RemoverVeiculo()
         {
             Console.WriteLine("Digite a placa do veículo para remover:");
-            string placa = Console.ReadLine();
+            string placa = Console.ReadLine().ToUpper();
 
             // Verifica se o veículo existe
-            if (veiculos.Any(x => x.ToUpper() == placa.ToUpper()))
+            if (veiculos.Any(x => x == placa))
             {
                 Console.WriteLine("Digite a quantidade de horas que o veículo permaneceu estacionado:");
-                if(!int.TryParse(Console.ReadLine(), out int horas)){
-                    Console.WriteLine("Insira um numero de horas válido!");
-                    return;
+                int horas = 0;
+                bool horaValida = false;
+                while (!horaValida)
+                {
+                    string entrada = Console.ReadLine().ToUpper();
+                    if(entrada == "SAIR"){
+                        Console.WriteLine("Regressando ao menu.");
+                        return;
+                    }
+
+                    if(int.TryParse(entrada, out horas)){
+                        horaValida = true;
+                    }
+                    else{
+                        Console.WriteLine("Insira um numero de horas válido!, ou digite \"SAIR\" para voltar ao menu.");
+                    }
                 }
+                
                 decimal valorTotal = precoInicial + precoPorHora * horas;      
                 veiculos.Remove(placa);
                 Console.WriteLine($"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotal}");
